@@ -1,27 +1,26 @@
 from django.shortcuts import render
 
 from ..forms.comment_form import CommentForm
-from ..models.post import Post
-from ..models.comment import Comment
+from ...data.models.post import Post
+from ...data.models.comment import Comment
+from ...data.db_context import DATA
 
 
 def blog_index(request):
-    posts = Post.objects.all().order_by("-created_on")
+    posts = DATA.get_all_posts()
     context = {"posts": posts}
     return render(request, "blog_index.html", context)
 
 
 def blog_category(request, category):
-    posts = Post.objects.filter(categories__name__contains=category).order_by(
-        "-created_on"
-    )
+    posts = DATA.get_posts_by_category(category)
     context = {"category": category, "posts": posts}
     return render(request, "blog_category.html", context)
 
 
 def blog_detail(request, pk):
-    post = Post.objects.get(pk=pk)
-    comments = Comment.objects.filter(post=post)
+    post = DATA.get_post_by_id(pk)
+    comments = DATA.get_comments_by_post(post)
 
     form = CommentForm()
     if request.method == "POST":

@@ -5,6 +5,9 @@ from .views.blog import blog_index, blog_detail, blog_category
 
 
 urlpatterns = [
+    # home
+    path("", project_index, name="project_index"),
+
     # projects
     path("projects/", project_index, name="project_index"),
     path("projects/<int:pk>/", project_details, name="project_details"),
